@@ -13,7 +13,7 @@
 
 organize_rama <- function(x){
   ### 1. Función que "limpia" la variable PP04B_COD para que tenga 2 o 4 caracteres.
-  corregir.rama <- function(columna = x){
+  corregir_rama <- function(columna = x){
     columna <- as.character(columna)
     columna <- dplyr::case_when(nchar(columna) == 1 ~ paste0("0", columna),
                                 nchar(columna) == 2 ~ columna,
@@ -26,8 +26,8 @@ organize_rama <- function(x){
   ### 2. Función que opera sobre el código de 2 o 4 dígitos, y devuelve 22 categorías según el
   ###    Clasificador de Actividades Económicas para Encuestas Sociodemográficas CAES - Mercosur 1.0.
 
-  rama.caes1.0 <- function(variable = rama){
-    rama.caes <- dplyr::case_when(
+  rama_caes1_0 <- function(variable = rama){
+    rama_caes <- dplyr::case_when(
       ## A --> Agricultura, caza, silvicultura y pesca.
       (variable %in% c("01", "0101", "0102", "0103", "0104", "0105",
                        "02", "0200", "03", "0300")) ~ 1,
@@ -93,8 +93,8 @@ organize_rama <- function(x){
   ### 3. Función que opera sobre el código de 22 categorías, y devuelve la codificación de rama de
   ###    actividad según la agrupación de EPH (14 categorías numeradas)
 
-  rama.caes1.0.pub <- function(variable = rama.caes){
-    rama.eph <- dplyr::case_when(
+  rama_caes1_0_pub <- function(variable = rama_caes){
+    rama_eph <- dplyr::case_when(
       variable == 1  | variable == 2 ~ 1,                     # Actividades primarias
       variable == 3  ~ 2,                                     # Industria manufacturera
       variable == 6  ~ 3,                                     # Construcción
@@ -115,8 +115,8 @@ organize_rama <- function(x){
   ###    (14 categorías nombradas). Es tipo factor y tiene los labels definidos según el orden
   ###    del comunicado.
 
-  rama.eph.nombre <- function(variable = rama.eph){
-    rama.nombre <- dplyr::case_when(
+  rama_eph_nombre <- function(variable = rama_eph){
+    rama_nombre <- dplyr::case_when(
       variable == 1  ~ "Actividades primarias",
       variable == 2  ~ "Industria manufacturera",
       variable == 3  ~ "Construccion",
@@ -132,7 +132,7 @@ organize_rama <- function(x){
       variable == 13 ~ "Otras ramas",
       variable == 14 ~ "Actividades no bien especificadas")
 
-    rama.nombre <- factor(rama.nombre,
+    rama_nombre <- factor(rama_nombre,
                           levels = c("Actividades primarias",
                                      "Industria manufacturera",
                                      "Construccion",
@@ -150,10 +150,10 @@ organize_rama <- function(x){
 
   }
 
-  rama.nombre <- corregir.rama(x)
-  rama.nombre <- rama.caes1.0(rama.nombre)
-  rama.nombre <- rama.caes1.0.pub(rama.nombre)
-  rama.nombre <- rama.eph.nombre(rama.nombre)
+  rama_nombre <- corregir_rama(x)
+  rama_nombre <- rama_caes1_0(rama_nombre)
+  rama_nombre <- rama_caes1_0_pub(rama_nombre)
+  rama_nombre <- rama_eph_nombre(rama_nombre)
 
 }
 
